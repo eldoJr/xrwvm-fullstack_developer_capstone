@@ -14,7 +14,8 @@ from django.contrib.auth import login, authenticate, logout
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
-# from .populate import initiate
+from .populate import initiate
+from .models import CarMake, CarModel
 
 
 # Get an instance of a logger
@@ -126,3 +127,28 @@ def add_review(request):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     return JsonResponse({'error': 'Only POST method is allowed'}, status=405)
+
+
+def get_cars(request):
+    count = CarMake.objects.filter().count()
+    print(count)
+    if(count == 0):
+        initiate()
+    car_models = CarModel.objects.select_related('car_make')
+    cars = []
+    for car_model in car_models:
+        cars.append({"CarModel": car_model.name, "CarMake": car_model.car_make.name})
+    
+    # Check if the request is coming from a browser (admin interface)
+    if request.headers.get('Accept', '').find('text/html') != -1:
+        from django.shortcuts import render
+        car_makes = CarMake.objects.all()
+        context = {
+            'car_makes': car_makes,
+            'car_models': car_models,
+            'cars_json': cars
+        }
+        return render(request, 'djangoapp/cars_list.html', context)
+    else:
+        # Return JSON for API calls
+        return JsonResponse({"CarModels":cars})
