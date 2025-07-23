@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f9f9f9;
+        }
+
+        .contact-container {
+            margin-top: 60px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .contact-header {
+            margin-bottom: 30px;
+        }
+
+        .active {
+            font-weight: bold;
+            color: #007bff !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">MyCompany</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/contact">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contact Info -->
+    <div class="container contact-container">
+        <h2 class="contact-header">Get in Touch</h2>
+        <p><strong>Address:</strong> 123 Innovation Drive, Tech City, TX 75001</p>
+        <p><strong>Email:</strong> contact@mycompany.com</p>
+        <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+        <p><strong>Business Hours:</strong> Mon - Fri: 9:00 AM - 6:00 PM</p>
+    </div>
+</body>
+</html>

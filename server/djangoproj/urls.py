@@ -25,4 +25,11 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name="Home.html")),
     path('about/', TemplateView.as_view(template_name="About.html")),
     path('contact/', TemplateView.as_view(template_name="Contact.html")),
+    path('login/', TemplateView.as_view(template_name="index.html")),
+    path('register/', TemplateView.as_view(template_name="index.html")),
+    # Serve manifest.json from the build directory
+    path('manifest.json', TemplateView.as_view(
+        template_name="manifest.json",
+        content_type="application/json"
+    )),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
