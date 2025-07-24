@@ -77,31 +77,29 @@ def registration(request):
 
 
 # Proxy views to forward requests to the database server
-from .restapis import get_dealers, get_dealers_by_state, get_dealer_by_id, get_dealer_reviews as api_get_dealer_reviews
+from .restapis import get_request, analyze_review_sentiments, post_review
 
-# Proxy view for fetchDealers
-def get_dealerships(request):
-    try:
-        dealers = get_dealers()
-        return JsonResponse(dealers, safe=False)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
-# Proxy view for fetchDealers/:state
-def get_dealerships_by_state(request, state):
-    try:
-        dealers = get_dealers_by_state(state)
-        return JsonResponse(dealers, safe=False)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+#Update the `get_dealerships` render list of dealerships all by default, particular state if state is passed
+def get_dealerships(request, state="All"):
+    if(state == "All"):
+        endpoint = "/fetchDealers"
+    else:
+        endpoint = "/fetchDealers/"+state
+    dealerships = get_request(endpoint)
+    return JsonResponse({"status":200,"dealers":dealerships})
 
 # Proxy view for fetchDealer/:id
 def get_dealer_details(request, dealer_id):
-    try:
-        dealer = get_dealer_by_id(dealer_id)
-        return JsonResponse(dealer, safe=False)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+    if(dealer_id):
+        endpoint = "/fetchReviews/dealer/"+str(dealer_id)
+        reviews = get_request(endpoint)
+        for review_detail in reviews:
+            response = analyze_review_sentiments(review_detail['review'])
+            print(response)
+            review_detail['sentiment'] = response['sentiment']
+        return JsonResponse({"status":200,"reviews":reviews})
+    else:
+        return JsonResponse({"status":400,"message":"Bad Request"})
 
 # Proxy view for fetchReviews/dealer/:id
 def get_dealer_reviews(request, dealer_id):
@@ -114,17 +112,15 @@ def get_dealer_reviews(request, dealer_id):
 # Proxy view for insert_review
 @csrf_exempt
 def add_review(request):
-    if request.method == 'POST':
+    if(request.user.is_anonymous == False):
+        data = json.loads(request.body)
         try:
-            data = json.loads(request.body)
-            response = requests.post(
-                f'{DATABASE_API_URL}/insert_review',
-                json=data
-            )
-            return JsonResponse(response.json(), safe=False)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'Only POST method is allowed'}, status=405)
+            response = post_review(data)
+            return JsonResponse({"status":200})
+        except:
+            return JsonResponse({"status":401,"message":"Error in posting review"})
+    else:
+        return JsonResponse({"status":403,"message":"Unauthorized"})
 
 
 def get_cars(request):
@@ -150,3 +146,4 @@ def get_cars(request):
     else:
         # Return JSON for API calls
         return JsonResponse({"CarModels":cars})
+        
