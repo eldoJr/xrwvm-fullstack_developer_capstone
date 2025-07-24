@@ -77,39 +77,37 @@ def registration(request):
 
 
 # Proxy views to forward requests to the database server
-
-# Database server URL
-DATABASE_API_URL = 'http://localhost:3030'
+from .restapis import get_dealers, get_dealers_by_state, get_dealer_by_id, get_dealer_reviews as api_get_dealer_reviews
 
 # Proxy view for fetchDealers
 def get_dealerships(request):
     try:
-        response = requests.get(f'{DATABASE_API_URL}/fetchDealers')
-        return JsonResponse(response.json(), safe=False)
+        dealers = get_dealers()
+        return JsonResponse(dealers, safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
 # Proxy view for fetchDealers/:state
 def get_dealerships_by_state(request, state):
     try:
-        response = requests.get(f'{DATABASE_API_URL}/fetchDealers/{state}')
-        return JsonResponse(response.json(), safe=False)
+        dealers = get_dealers_by_state(state)
+        return JsonResponse(dealers, safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
 # Proxy view for fetchDealer/:id
 def get_dealer_details(request, dealer_id):
     try:
-        response = requests.get(f'{DATABASE_API_URL}/fetchDealer/{dealer_id}')
-        return JsonResponse(response.json(), safe=False)
+        dealer = get_dealer_by_id(dealer_id)
+        return JsonResponse(dealer, safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
 # Proxy view for fetchReviews/dealer/:id
 def get_dealer_reviews(request, dealer_id):
     try:
-        response = requests.get(f'{DATABASE_API_URL}/fetchReviews/dealer/{dealer_id}')
-        return JsonResponse(response.json(), safe=False)
+        reviews = api_get_dealer_reviews(dealer_id)
+        return JsonResponse(reviews, safe=False)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
