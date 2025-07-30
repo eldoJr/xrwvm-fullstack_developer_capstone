@@ -18,6 +18,7 @@ services:
       - 3030:3030
     depends_on: 
       - mongo_db
+    restart: always
 
 volumes:
   mongo_data: {}

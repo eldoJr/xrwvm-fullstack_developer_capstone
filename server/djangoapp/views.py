@@ -91,6 +91,15 @@ def get_dealerships(request, state="All"):
 # Proxy view for fetchDealer/:id
 def get_dealer_details(request, dealer_id):
     if(dealer_id):
+        endpoint = "/fetchDealer/"+str(dealer_id)
+        dealer = get_request(endpoint)
+        return JsonResponse({"status":200,"dealer":dealer})
+    else:
+        return JsonResponse({"status":400,"message":"Bad Request"})
+
+# Proxy view for fetchReviews/dealer/:id
+def get_dealer_reviews(request, dealer_id):
+    if(dealer_id):
         endpoint = "/fetchReviews/dealer/"+str(dealer_id)
         reviews = get_request(endpoint)
         for review_detail in reviews:
@@ -101,26 +110,16 @@ def get_dealer_details(request, dealer_id):
     else:
         return JsonResponse({"status":400,"message":"Bad Request"})
 
-# Proxy view for fetchReviews/dealer/:id
-def get_dealer_reviews(request, dealer_id):
-    try:
-        reviews = api_get_dealer_reviews(dealer_id)
-        return JsonResponse(reviews, safe=False)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
 # Proxy view for insert_review
 @csrf_exempt
 def add_review(request):
-    if(request.user.is_anonymous == False):
-        data = json.loads(request.body)
-        try:
-            response = post_review(data)
-            return JsonResponse({"status":200})
-        except:
-            return JsonResponse({"status":401,"message":"Error in posting review"})
-    else:
-        return JsonResponse({"status":403,"message":"Unauthorized"})
+    data = json.loads(request.body)
+    try:
+        response = post_review(data)
+        return JsonResponse({"status":200})
+    except Exception as e:
+        print(f"Error posting review: {e}")
+        return JsonResponse({"status":401,"message":"Error in posting review"})
 
 
 def get_cars(request):

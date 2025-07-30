@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import "./Dealers.css";
 import "../assets/style.css";
 import Header from '../Header/Header';
@@ -12,6 +12,7 @@ const PostReview = () => {
   const [year, setYear] = useState("");
   const [date, setDate] = useState("");
   const [carmodels, setCarmodels] = useState([]);
+  const navigate = useNavigate();
 
   let curr_url = window.location.href;
   let root_url = curr_url.substring(0,curr_url.indexOf("postreview"));
@@ -20,6 +21,8 @@ const PostReview = () => {
   let dealer_url = root_url+`djangoapp/dealer/${id}`;
   let review_url = root_url+`djangoapp/add_review`;
   let carmodels_url = root_url+`djangoapp/get_cars`;
+  
+  console.log('URLs:', { dealer_url, review_url, carmodels_url });
 
   const postreview = async ()=>{
     let name = sessionStorage.getItem("firstname")+" "+sessionStorage.getItem("lastname");
@@ -27,7 +30,7 @@ const PostReview = () => {
     if(name.includes("null")) {
       name = sessionStorage.getItem("username");
     }
-    if(!model || review === "" || date === "" || year === "" || model === "") {
+    if(!model || review === "" || date === "" || year === "") {
       alert("All details are mandatory")
       return;
     }
@@ -48,18 +51,28 @@ const PostReview = () => {
     });
 
     console.log(jsoninput);
-    const res = await fetch(review_url, {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-      },
-      body: jsoninput,
-  });
+    try {
+      const res = await fetch(review_url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: jsoninput,
+      });
 
-  const json = await res.json();
-  if (json.status === 200) {
-      window.location.href = window.location.origin+"/dealer/"+id;
-  }
+      const json = await res.json();
+      console.log('Response:', json);
+      
+      if (json.status === 200) {
+          alert("Review posted successfully!");
+          window.location.href = window.location.origin+"/dealer/"+id;
+      } else {
+          alert("Error posting review: " + (json.message || "Unknown error"));
+      }
+    } catch (error) {
+      console.error('Error posting review:', error);
+      alert("Network error occurred while posting review");
+    }
 
   }
   const get_dealer = async ()=>{
@@ -69,9 +82,7 @@ const PostReview = () => {
     const retobj = await res.json();
     
     if(retobj.status === 200) {
-      let dealerobjs = Array.from(retobj.dealer)
-      if(dealerobjs.length > 0)
-        setDealer(dealerobjs[0])
+      setDealer(retobj.dealer)
     }
   }
 
@@ -110,7 +121,7 @@ const PostReview = () => {
       </div >
 
       <div className='input_field'>
-      Car Year <input type="int" onChange={(e) => setYear(e.target.value)} max={2023} min={2015}/>
+      Car Year <input type="number" onChange={(e) => setYear(e.target.value)} max={2023} min={2015}/>
       </div>
 
       <div>
