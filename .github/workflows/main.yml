@@ -57,3 +57,4 @@ jobs:
           # This command finds all JavaScript files recursively excluding node_modules and runs JSHint on them
           find ./server/database -maxdepth 1 -name "*.js" -exec jshint {} +
           echo "Linted all the js files successfully"
+          
