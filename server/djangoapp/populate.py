@@ -17,7 +17,7 @@ def initiate():
 
     # Create CarModel instances with the corresponding CarMake instances
     car_model_data = [
-      {"name":"Pathfinder", "type":"SUV", "year": date(2023, 1, 1), "car_make":car_make_instances[0], "dealer_id": 1},
+        {"name":"Pathfinder", "type":"SUV", "year": date(2023, 1, 1), "car_make":car_make_instances[0], "dealer_id": 1},
       {"name":"Qashqai", "type":"SUV", "year": date(2023, 1, 1), "car_make":car_make_instances[0], "dealer_id": 1},
       {"name":"XTRAIL", "type":"SUV", "year": date(2023, 1, 1), "car_make":car_make_instances[0], "dealer_id": 2},
       {"name":"A-Class", "type":"SUV", "year": date(2023, 1, 1), "car_make":car_make_instances[1], "dealer_id": 2},
