@@ -1,31 +1,4 @@
 [flake8]
 max-line-length = 88
-ignore = 
-    E501,  # line too long
-    W503,  # line break before binary operator
-    W293,  # blank line contains whitespace
-    W291,  # trailing whitespace
-    E302,  # expected 2 blank lines, found 1
-    E305,  # expected 2 blank lines after class or function definition
-    F401,  # imported but unused
-    F811,  # redefinition of unused name
-    E402,  # module level import not at top of file
-    E722,  # do not use bare except
-    E275,  # missing whitespace after keyword
-    E231,  # missing whitespace after ','
-    E225,  # missing whitespace around operator
-    E261,  # at least two spaces before inline comment
-    E265,  # block comment should start with '# '
-    W391,  # blank line at end of file
-    E117,  # over-indented
-    E131,  # continuation line unaligned for hanging indent
-    E303,  # too many blank lines
-    F841   # local variable assigned but never used
-exclude = 
-    migrations/,
-    __pycache__/,
-    .git/,
-    .github/,
-    venv/,
-    env/,
-    node_modules/
+ignore = E501,W503,W293,W291,E302,E305,F401,F811,E402,E722,E275,E231,E225,E261,E265,W391,E117,E131,E303,F841
+exclude = migrations/,__pycache__/,.git/,.github/,venv/,env/,node_modules/
