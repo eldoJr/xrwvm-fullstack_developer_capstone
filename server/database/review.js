@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const reviews = new Schema({
 	id: {
     type: Number,
-    required: true,
+    required: true
 	},
 	name: {
     type: String,
@@ -13,7 +13,7 @@ const reviews = new Schema({
   },
   dealership: {
     type: Number,
-    required: true,
+    required: true
   },
   review: {
     type: String,
@@ -38,7 +38,7 @@ const reviews = new Schema({
   car_year: {
     type: Number,
     required: true
-  },
+  }
 });
 
 module.exports = mongoose.model('reviews', reviews);

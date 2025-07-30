@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const dealerships = new Schema({
 	id: {
     type: Number,
-    required: true,
+    required: true
 	},
 	city: {
     type: String,
@@ -32,7 +32,7 @@ const dealerships = new Schema({
     required: true
   },
   short_name: {
-    type: String,
+    type: String
   },
   full_name: {
     type: String,

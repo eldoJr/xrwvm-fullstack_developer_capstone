@@ -1,18 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const fs = require('fs');
-const  cors = require('cors')
-const app = express()
+const cors = require('cors');
+const app = express();
 const port = 3030;
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use(require('body-parser').urlencoded({ extended: false }));
 
 const reviews_data = JSON.parse(fs.readFileSync("data/reviews.json", 'utf8'));
 const dealerships_data = JSON.parse(fs.readFileSync("data/dealerships.json", 'utf8'));
 
-mongoose.connect("mongodb://mongo_db:27017/",{'dbName':'dealershipsDB'})
+mongoose.connect("mongodb://mongo_db:27017/", {'dbName':'dealershipsDB'})
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Failed to connect to MongoDB:', err));
 
@@ -22,14 +22,14 @@ const Reviews = require('./review');
 const Dealerships = require('./dealership');
 
 // Initialize database with data
-Reviews.deleteMany({}).then(()=>{
-  Reviews.insertMany(reviews_data['reviews'])
+Reviews.deleteMany({}).then(() => {
+  Reviews.insertMany(reviews_data.reviews)
     .then(() => console.log('Reviews data loaded successfully'))
     .catch(err => console.error('Error loading reviews data:', err));
 });
 
-Dealerships.deleteMany({}).then(()=>{
-  Dealerships.insertMany(dealerships_data['dealerships'])
+Dealerships.deleteMany({}).then(() => {
+  Dealerships.insertMany(dealerships_data.dealerships)
     .then(() => console.log('Dealerships data loaded successfully'))
     .catch(err => console.error('Error loading dealerships data:', err));
 });
@@ -37,7 +37,7 @@ Dealerships.deleteMany({}).then(()=>{
 
 // Express route to home
 app.get('/', async (req, res) => {
-    res.send("Welcome to the Mongoose API")
+    res.send("Welcome to the Mongoose API");
 });
 
 // Express route to fetch all reviews
@@ -118,20 +118,20 @@ app.get('/fetchDealer/:id', async (req, res) => {
 
 //Express route to insert review
 app.post('/insert_review', async (req, res) => {
-  data = req.body;
-  const documents = await Reviews.find().sort( { id: -1 } )
-  let new_id = documents[0]['id']+1
+  const data = req.body;
+  const documents = await Reviews.find().sort( { id: -1 } );
+  let new_id = documents[0].id + 1;
 
   const review = new Reviews({
 		"id": new_id,
-		"name": data['name'],
-		"dealership": data['dealership'],
-		"review": data['review'],
-		"purchase": data['purchase'],
-		"purchase_date": data['purchase_date'],
-		"car_make": data['car_make'],
-		"car_model": data['car_model'],
-		"car_year": data['car_year'],
+		"name": data.name,
+		"dealership": data.dealership,
+		"review": data.review,
+		"purchase": data.purchase,
+		"purchase_date": data.purchase_date,
+		"car_make": data.car_make,
+		"car_model": data.car_model,
+		"car_year": data.car_year
 	});
 
   try {
